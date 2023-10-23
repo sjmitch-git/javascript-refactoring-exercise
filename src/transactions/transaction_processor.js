@@ -7,23 +7,19 @@ function processTransactions(transActions) {
     throw new Error("Undefined collection of transactions");
   }
 
-  let txCount = {};
-
-  const numberOfTransactions = transActions.length;
-
-  for (var i = 0; i < numberOfTransactions; i++) {
-    const transaction = transActions[i];
-    txCount[transaction]
-      ? (txCount[transaction] += 1)
-      : (txCount[transaction] = 1);
-  }
+  let txCount = transActions.reduce((acc, transaction) => {
+    acc[transaction] = (acc[transaction] || 0) + 1;
+    return acc;
+  }, {});
 
   txCount = sortByAmountThenName(txCount);
 
   // Place them back in array for returning
-  Object.keys(txCount).forEach(function (key, index) {
+  /* Object.keys(txCount).forEach(function (key, index) {
     txr[index] = `${key} ${txCount[key]}`;
-  });
+  }); */
+
+  txr = Object.keys(txCount).map((key) => `${key} ${txCount[key]}`);
 
   return txr;
 }
@@ -51,13 +47,5 @@ function sortByAmountThenName(txCount) {
 function validateTransactions(transactions) {
   return transactions ? true : false;
 }
-
-/* function validateTransactions(transactions) {
-    if(transactions === undefined) {
-        return false;
-    } 
-
-    return true;
-} */
 
 module.exports = processTransactions;
