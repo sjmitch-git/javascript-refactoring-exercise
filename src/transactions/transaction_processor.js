@@ -1,4 +1,4 @@
-var txr = [];
+let txr = [];
 
 function processTransactions(transActions) {
   txr = [];
@@ -14,32 +14,18 @@ function processTransactions(transActions) {
 
   txCount = sortByAmountThenName(txCount);
 
-  // Place them back in array for returning
-  /* Object.keys(txCount).forEach(function (key, index) {
-    txr[index] = `${key} ${txCount[key]}`;
-  }); */
-
   txr = Object.keys(txCount).map((key) => `${key} ${txCount[key]}`);
 
   return txr;
 }
 
 function sortByAmountThenName(txCount) {
-  let sortedKeys = Object.keys(txCount).sort(function sortingFunction(
-    itemOne,
-    itemTwo
-  ) {
-    return (
-      txCount[itemTwo] - txCount[itemOne] ||
-      itemOne > itemTwo ||
-      -(itemOne < itemTwo)
-    );
-  });
-
-  let sortedResults = {};
-  for (let objectKey of sortedKeys) {
-    sortedResults[objectKey] = txCount[objectKey];
-  }
+  const sortedResults = Object.keys(txCount)
+    .sort((a, b) => txCount[b] - txCount[a] || a.localeCompare(b))
+    .reduce((acc, key) => {
+      acc[key] = txCount[key];
+      return acc;
+    }, {});
 
   return sortedResults;
 }
