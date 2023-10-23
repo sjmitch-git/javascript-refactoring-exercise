@@ -31,7 +31,7 @@ function sortByAmountThenName(txCount) {
 }
 
 function validateTransactions(transactions) {
-  return transactions ? true : false;
+  return transactions !== undefined && transactions !== null;
 }
 
 module.exports = processTransactions;
