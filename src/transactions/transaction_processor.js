@@ -1,8 +1,4 @@
-let txr = [];
-
 function processTransactions(transActions) {
-  txr = [];
-
   if (!validateTransactions(transActions)) {
     throw new Error("Undefined collection of transactions");
   }
@@ -14,9 +10,7 @@ function processTransactions(transActions) {
 
   txCount = sortByAmountThenName(txCount);
 
-  txr = Object.keys(txCount).map((key) => `${key} ${txCount[key]}`);
-
-  return txr;
+  return Object.keys(txCount).map((key) => `${key} ${txCount[key]}`);
 }
 
 function sortByAmountThenName(txCount) {
