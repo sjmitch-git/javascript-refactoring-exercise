@@ -1,31 +1,37 @@
-function processTransactions(transActions) {
-  if (!validateTransactions(transActions)) {
+const processTransactions = (transactions) => {
+  if (!validateTransactions(transactions)) {
     throw new Error("Undefined collection of transactions");
   }
 
-  let txCount = transActions.reduce((acc, transaction) => {
-    acc[transaction] = (acc[transaction] || 0) + 1;
-    return acc;
+  return convertArrOfArraysToArrayOfStrings(
+    sortByTransactionCountThenBySalesItem(
+      convertObjToArr(convertArrToObjWithTransactionsCountValue(transactions))
+    )
+  );
+};
+
+const validateTransactions = (transactions) => {
+  return transactions !== undefined;
+};
+
+const convertArrToObjWithTransactionsCountValue = (transactions) => {
+  return transactions.reduce((obj, transaction) => {
+    obj[transaction] = (obj[transaction] || 0) + 1;
+    return obj;
   }, {});
+};
 
-  txCount = sortByAmountThenName(txCount);
+const convertObjToArr = (arr) => {
+  return Object.entries(arr);
+};
 
-  return Object.keys(txCount).map((key) => `${key} ${txCount[key]}`);
-}
+const sortByTransactionCountThenBySalesItem = (arr) =>
+  arr.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
-function sortByAmountThenName(txCount) {
-  const sortedResults = Object.keys(txCount)
-    .sort((a, b) => txCount[b] - txCount[a] || a.localeCompare(b))
-    .reduce((acc, key) => {
-      acc[key] = txCount[key];
-      return acc;
-    }, {});
-
-  return sortedResults;
-}
-
-function validateTransactions(transactions) {
-  return transactions !== undefined && transactions !== null;
-}
+const convertArrOfArraysToArrayOfStrings = (transactions) => {
+  return transactions.map((transaction) => {
+    return `${transaction[0]} ${transaction[1]}`;
+  });
+};
 
 module.exports = processTransactions;
